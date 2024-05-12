@@ -1,0 +1,62 @@
+[
+    {
+        "make":"Volvo",
+        "model":"XC60",
+        "body_type":"SUV",
+        "doors":5.0,
+        "top_speed":220,
+        "acceleration":8.0,
+        "fuel_consumption":6.0,
+        "engine":"B4"
+    },
+    {
+        "make":"Seat",
+        "model":"Leon",
+        "body_type":"hatchback",
+        "doors":5.0,
+        "top_speed":240,
+        "acceleration":8.0,
+        "fuel_consumption":null,
+        "engine":"1.5 TSI"
+    },
+    {
+        "make":"Opel",
+        "model":"Corsa",
+        "body_type":"hatchback",
+        "doors":5.0,
+        "top_speed":180,
+        "acceleration":9.9,
+        "fuel_consumption":5.5,
+        "engine":"1.2 Turbo"
+    },
+    {
+        "make":"Ford",
+        "model":"Mustang",
+        "body_type":"coupe",
+        "doors":2.0,
+        "top_speed":249,
+        "acceleration":5.8,
+        "fuel_consumption":10.2,
+        "engine":"2.3L EcoBoost"
+    },
+    {
+        "make":"Volkswagen",
+        "model":"Passat",
+        "body_type":"sedan",
+        "doors":4.0,
+        "top_speed":230,
+        "acceleration":7.5,
+        "fuel_consumption":6.0,
+        "engine":"2.0 TDI"
+    },
+    {
+        "make":"Porsche",
+        "model":"911",
+        "body_type":"coupe",
+        "doors":null,
+        "top_speed":330,
+        "acceleration":3.5,
+        "fuel_consumption":11.8,
+        "engine":"3.0L Twin Turbo V6"
+    }
+]
