@@ -1,0 +1,108 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Title</title>#}
+{#    <link rel="stylesheet" href="../static/styles/indexStyles.css">#}
+{#</head>#}
+{#<body>#}
+{#<form method="POST" enctype="multipart/form-data">#}
+{#        {{ form.hidden_tag() }}#}
+{#        {{ form.file() }}#}
+{#        {{ form.submit() }}#}
+{#</form>#}
+{#{% block filetype_ %}#}
+{#    {% if error.get("file", False) %}#}
+{#        <p>#}
+{#            {% print(error["file"][0]) %}#}
+{#        </p>#}
+{#    {% endif %}#}
+{#{% endblock %}#}
+{#{% block details_ %}#}
+{#    {% if details %}#}
+{#        <p>#}
+{#            <h4>General information:</h4>#}
+{#            {% for i in details["general"] %}#}
+{#                <h5>{{ i }}{{ details["general"][i] }}</h5>#}
+{#            {% endfor %}#}
+{#        </p>#}
+{#        <p>#}
+{#            {% if "numerical" in details %}#}
+{#                <h4>Information about numerical columns:</h4>#}
+{#                    {% for d in details["numerical"] %}#}
+{#                        <h5>#}
+{#                            {{ d }}:#}
+{#                        </h5>#}
+{##}
+{#                        {% for s in details["numerical"][d] %}#}
+{#                            <p>#}
+{#                                {{ s }}: {{ details["numerical"][d][s] }}#}
+{#                            </p>#}
+{#                        {% endfor %}#}
+{#                    {% endfor %}#}
+{#                {% endif %}#}
+{#        </p>#}
+{#    {% endif %}#}
+{#{% endblock %}#}
+{#</body>#}
+{#</html>#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Upload</title>
+    <link rel="stylesheet" href="../static/styles/indexStyles.css">
+</head>
+<body>
+<div class="container">
+    <h1>File Upload</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="button-container">
+            <div class="file-input">
+                {{ form.file() }}
+            </div>
+            <div class="submit-file">
+                {{ form.submit() }}
+            </div>
+        </div>
+    </form>
+    <div class="error">
+        {% block filetype_ %}
+            {% if error.get("file", False) %}
+                <p class="error-msg">
+                    <strong>Error:</strong> {{ error["file"][0] }}
+                </p>
+            {% endif %}
+        {% endblock %}
+    </div>
+    <div class="details">
+        {% block details_ %}
+            {% if details %}
+                <div>
+                    <h2>General information:</h2>
+                    <ul>
+                        {% for i in details["general"] %}
+                            <li><strong>{{ i }}</strong> {{ details["general"][i] }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% if "numerical" in details %}
+                    <div>
+                        <h2>Information about numerical columns:</h2>
+                        {% for d in details["numerical"] %}
+                            <h3>{{ d }}:</h3>
+                            <ul>
+                                {% for s in details["numerical"][d] %}
+                                    <li><strong>{{ s }}:</strong> {{ details["numerical"][d][s] }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endblock %}
+    </div>
+</div>
+</body>
+</html>
