@@ -1,51 +1,3 @@
-{#<!DOCTYPE html>#}
-{#<html lang="en">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <title>Title</title>#}
-{#    <link rel="stylesheet" href="../static/styles/indexStyles.css">#}
-{#</head>#}
-{#<body>#}
-{#<form method="POST" enctype="multipart/form-data">#}
-{#        {{ form.hidden_tag() }}#}
-{#        {{ form.file() }}#}
-{#        {{ form.submit() }}#}
-{#</form>#}
-{#{% block filetype_ %}#}
-{#    {% if error.get("file", False) %}#}
-{#        <p>#}
-{#            {% print(error["file"][0]) %}#}
-{#        </p>#}
-{#    {% endif %}#}
-{#{% endblock %}#}
-{#{% block details_ %}#}
-{#    {% if details %}#}
-{#        <p>#}
-{#            <h4>General information:</h4>#}
-{#            {% for i in details["general"] %}#}
-{#                <h5>{{ i }}{{ details["general"][i] }}</h5>#}
-{#            {% endfor %}#}
-{#        </p>#}
-{#        <p>#}
-{#            {% if "numerical" in details %}#}
-{#                <h4>Information about numerical columns:</h4>#}
-{#                    {% for d in details["numerical"] %}#}
-{#                        <h5>#}
-{#                            {{ d }}:#}
-{#                        </h5>#}
-{##}
-{#                        {% for s in details["numerical"][d] %}#}
-{#                            <p>#}
-{#                                {{ s }}: {{ details["numerical"][d][s] }}#}
-{#                            </p>#}
-{#                        {% endfor %}#}
-{#                    {% endfor %}#}
-{#                {% endif %}#}
-{#        </p>#}
-{#    {% endif %}#}
-{#{% endblock %}#}
-{#</body>#}
-{#</html>#}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,29 +32,31 @@
         {% block details_ %}
             {% if details %}
                 <div>
-                    <h2>General information:</h2>
-                    <ul>
-                        {% for i in details["general"] %}
-                            <li><strong>{{ i }}</strong> {{ details["general"][i] }}</li>
-                        {% endfor %}
-                    </ul>
+                    {% for h in details["1D"] %}
+                        <h2>{{ h }}</h2>
+                        <ul>
+                            {% for i in details["1D"][h] %}
+                                <li><strong>{{ i }}</strong> {{ details["1D"][h][i] }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
                 </div>
-                {% if "numerical" in details %}
+                {% for t in details["2D"] %}
                     <div>
-                        <h2>Information about numerical columns:</h2>
-                        {% for d in details["numerical"] %}
+                        <h2>{{ t }}</h2>
+                        {% for d in details["2D"][t] %}
                             <h3>{{ d }}:</h3>
                             <ul>
-                                {% for s in details["numerical"][d] %}
-                                    <li><strong>{{ s }}:</strong> {{ details["numerical"][d][s] }}</li>
+                                {% for s in details["2D"][t][d] %}
+                                    <li><strong>{{ s }}:</strong> {{ details["2D"][t][d][s] }}</li>
                                 {% endfor %}
                             </ul>
                         {% endfor %}
                     </div>
-                {% endif %}
+                {% endfor %}
             {% endif %}
-        {% endblock %}
     </div>
-</div>
+    {% endblock %}
+    </div>
 </body>
 </html>

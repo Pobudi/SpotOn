@@ -4,33 +4,26 @@ from flask_wtf.file import FileAllowed
 from wtforms import FileField, SubmitField
 from werkzeug.utils import secure_filename
 import os
-from django import template
 import pandas as pd
 import re
 from prometheus_flask_exporter import PrometheusMetrics
 import logging
+import numpy as np
 
 
-
-register = template.Library()
-
-@register.filter
-def get_type(value):
-    return type(value).__name__
-
-biggest = int(max([i.split(".")[0] for i in os.listdir("./static/files")]))
+biggest = int(max(["0"]+[i.split(".")[0] for i in os.listdir("./static/files")]))
 class UploadFile(FlaskForm):
     file = FileField("Browse", validators=[FileAllowed(["txt", "csv", "json"])])
     submit = SubmitField("Upload")
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secretsecret"
 app.config["UPLOAD_FOLDER"] = "static/files"
 logging.basicConfig(level=logging.INFO)
-logging.info("Setting LOGLEVEL to INFO")
 
 metrics = PrometheusMetrics(app)
-metrics.info("app_info", "App Info, this can be anything you want", version="1.7.1")
+metrics.info("app_info", description="Application for quick file insight", version="1.7.1")
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -44,37 +37,82 @@ def upload():
         extension = secure_filename(file.filename).split(".")[-1]
         path = os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'], f"{biggest}.{extension}")
         file.save(path)
-        details = make_details(path, extension)
+        details = make_details(path)
     return render_template("index.html", form=form, error=form.errors, details=details)
 
-def make_details(path, extension):
-    info = {"general": {}}
+def make_details(path):
+    """
+    :param path: path to file
+    :return: dict
+    """
+    extension = path.split(".")[-1]
+
+    info = {}
+
+    # Information gathering for .json and .csv files
+    # 1D data is data that will be displayed in this format:
+    # Header
+    # Subheader: value
+    # 2D data is data that will be displayed in this format:
+    # Header
+    # Smaller header (column name)
+    # Smaller header: value
     if extension!="txt":
+
+        # using pandas to read uploaded file
         df = eval(f"pd.read_{extension}('{path}')")
-        info["general"]["Number of rows: "], info["general"]["Number of columns: "] = df.shape[0], df.shape[1]
+        numerical = df.describe()
+
+        # General information
+        info["1D"] = {}
+        info["1D"]["General information"] = {}
+        info["1D"]["General information"]["Number of rows: "], info["1D"]["General information"]["Number of columns: "] = df.shape[0], df.shape[1]
         if not df.isnull().values.any():
-            info["general"]["No nulls in file"] = ""
+            info["1D"]["General information"]["No nulls in file"] = ""
         else:
             null_columns = [df.columns[i] for i, v in enumerate(sum(df.isnull().values)) if v]
-            info["general"]["Nulls present in these columns: "] = ", ".join(null_columns)
-        numerical = df.describe()
-        info["numerical"] = {}
+            info["1D"]["General information"]["Nulls present in these columns: "] = ", ".join(null_columns)
+
+        info["2D"] = {}
+        info["2D"]["Most frequent values in non numerical columns"] = {}
+        for i in np.setdiff1d(df.columns, numerical.columns):
+            info["2D"]["Most frequent values in non numerical columns"][i] = (df.groupby(i)
+                                                                    .count()
+                                                                    .max(axis=1)
+                                                                    .sort_values(ascending=False)
+                                                                    .head(10)
+                                                                    .to_dict())
+
+        # Information gathering about numerical columns
+        info["2D"]["Information about numerical columns"] = {}
         for c in numerical:
             col = numerical[c]
-            info["numerical"][c] = {"Mean": col["mean"],
+            info["2D"]["Information about numerical columns"][c] = {"Mean": col["mean"],
                                     "Standard deviation": col["std"],
                                     "Minimal value": col["min"],
                                     "Maximal value": col["max"]
                                     }
+
+    # Information gathering for .txt files
     else:
         file = open(path, "r")
         txt = file.read()
-        info["general"]["Number of characters: "] = len(txt)
-        info["general"]["Number of words: "] = len(txt.split(" "))
-        info["general"]["Number of sentences: "] = len(re.split("\. |! |\? ", txt))
+        info["1D"] = {}
+        info["1D"]["General information"] = {}
+        info["1D"]["General information"]["Number of characters: "] = len(txt)
+        info["1D"]["General information"]["Number of words: "] = len(txt.split(" "))
+        info["1D"]["General information"]["Number of sentences: "] = len(re.split("\. |! |\? ", txt))
+        mails = []
+        websites = []
+        for i in txt.split(" "):
+            if "@" in i:
+                mails.append(i)
+            elif "https://" in i or "http://" in i or "www." in i:
+                websites.append(i)
+        info["1D"]["General information"]["Emails found in text: "] = ", ".join(mails)
+        info["1D"]["General information"]["Websites found in text: "] = ", ".join(websites)
         file.close()
     return info
 
-
 if __name__ == "__main__":
-    app.run(port=8080)
+    app.run(host="0.0.0.0")
