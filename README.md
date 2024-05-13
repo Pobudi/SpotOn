@@ -19,7 +19,22 @@ Example behaviour and outputs:
 
 [Screencast from 2024-05-13 12-46-38.webm](https://github.com/Pobudi/SpotOn/assets/92460956/2022a645-cbf5-481a-af4e-f8a9cb8eb82d)
 
-Metrics:
+## Metrics:
+Every metric is explained in a comment above it.
+
+/metric endpoint:
 
 ![image](https://github.com/Pobudi/SpotOn/assets/92460956/dc2b8eaf-7449-4ce0-a4ee-b1c5b30ce8eb)
 
+Example metric viusalization in prometheus:
+
+
+![image](https://github.com/Pobudi/SpotOn/assets/92460956/97a0288f-eccb-43e4-84d2-19a5a6ff5ba3)
+
+
+
+## Future enhacements:
+In case when one docker container would not be sufficient to handle incoming traffic it would be advised to consider using Kubernetes or similiar service to allow scalability. Other possible solution would hosting on AWS EC2 instance with S3 AWS storage, and using AWS ELB for scalability.
+
+# Warning!
+### For testing purposes i set app secret key to a visible string. Before Production deployment, the key should be changed and stored as an environment variable. (Line 21 in main.py: ```app.config["SECRET_KEY"] = "secretsecret"```)
