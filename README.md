@@ -16,7 +16,10 @@ Accepted file formats are: ***.json, .csv, .txt***.
 
 Metrics about app are available at the **/metrics** endpoint. 
 Example behaviour and outputs:
+
 [Screencast from 2024-05-13 12-46-38.webm](https://github.com/Pobudi/SpotOn/assets/92460956/2022a645-cbf5-481a-af4e-f8a9cb8eb82d)
+
 Metrics:
+
 ![image](https://github.com/Pobudi/SpotOn/assets/92460956/dc2b8eaf-7449-4ce0-a4ee-b1c5b30ce8eb)
 
