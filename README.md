@@ -37,4 +37,4 @@ Example metric viusalization in prometheus:
 In case when one docker container would not be sufficient to handle incoming traffic it would be advised to consider using Kubernetes or similiar service to allow scalability. Other possible solution would hosting on AWS EC2 instance with S3 AWS storage, and using AWS ELB for scalability.
 
 # Warning!
-### For testing purposes i set app secret key to a visible string. Before Production deployment, the key should be changed and stored as an environment variable. (Line 21 in main.py: ```app.config["SECRET_KEY"] = "secretsecret"```)
+### For testing purposes i set app secret key to a visible string. Before Production deployment, the key should be changed and stored as an environment variable. (Line 17 in main.py: ```app.config["SECRET_KEY"] = "secretsecret"```)

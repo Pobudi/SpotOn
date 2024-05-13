@@ -10,20 +10,26 @@ from prometheus_flask_exporter import PrometheusMetrics
 import logging
 import numpy as np
 
-
-biggest = int(max(["0"]+[i.split(".")[0] for i in os.listdir("./static/files")]))
-class UploadFile(FlaskForm):
-    file = FileField("Browse", validators=[FileAllowed(["txt", "csv", "json"])])
-    submit = SubmitField("Upload")
-
-
+# App configuration
 app = Flask(__name__)
+# !!!!! Change value from "secretsecret" to something more complicated and store it in an
+# environment variable !!!!
 app.config["SECRET_KEY"] = "secretsecret"
 app.config["UPLOAD_FOLDER"] = "static/files"
 logging.basicConfig(level=logging.INFO)
 
+# Exposing metrics
 metrics = PrometheusMetrics(app)
 metrics.info("app_info", description="Application for quick file insight", version="1.7.1")
+
+# Looking for biggest file name value to help with keeping unique names
+biggest = int(max(["0"]+[i.split(".")[0] for i in os.listdir("./static/files")]))
+
+
+# Upload form class
+class UploadFile(FlaskForm):
+    file = FileField("Browse", validators=[FileAllowed(["txt", "csv", "json"])])
+    submit = SubmitField("Upload")
 
 
 @app.route('/', methods=['GET', 'POST'])
