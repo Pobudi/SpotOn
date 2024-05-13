@@ -1,16 +1,23 @@
 ## Steps to run the app:
 1. Download this repository.
 2. Run the docker command from the parent directory of this projects Dockerfile:
+   - Linux:
    
-   ```sudo docker build -t file_details .```
+      ```sudo docker build -t file_details .```
    
-   ```sudo docker run -p 5000:5000 --mount source=file_details_volume,target=/SpotOn file_details:latest```
-3. Go to this local address: [http://127.0.0.1:5000](http://127.0.0.1:5000)
+      ```sudo docker run -p 5000:5000 --mount source=file_details_volume,target=/SpotOn file_details:latest```
+   - Windows:
+     
+      ```docker build -t file_details .```
+     
+      ```docker run -p 5000:5000 --mount source=file_details_volume,target=/SpotOn file_details:latest```
+      
+4. Go to this local address: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
 ## Architecture:
 Application uses Flask for template rendering and backend behaviour. Uploaded files are stored on a docker volume 
 (```--mount source=file_details_volume,target=/SpotOn``` part of the command above). To avoid collisions between uploaded files, names of the stored 
-files are unique and different from the names of the files sent by the user. 
+files are unique and different from the names of the files sent by the user. Uploaded files are stored locally on a container. Location can be found under "Mountpoint" after running this command: ```docker volume inspect file_details_volume```
 
 Accepted file formats are: ***.json, .csv, .txt***. 
 
