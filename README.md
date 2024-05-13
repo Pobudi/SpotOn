@@ -22,7 +22,7 @@ Example behaviour and outputs:
 ## Metrics:
 Every metric is explained in a comment above it.
 
-**/metric** endpoint:
+**/metrics** endpoint:
 
 ![image](https://github.com/Pobudi/SpotOn/assets/92460956/dc2b8eaf-7449-4ce0-a4ee-b1c5b30ce8eb)
 
